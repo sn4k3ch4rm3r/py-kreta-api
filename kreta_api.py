@@ -1,4 +1,5 @@
 import requests
+import jwt
 
 class KretaEndpoints:
 	token = "/connect/token"
@@ -62,8 +63,15 @@ class KretaAPI:
 	def authenticate_token(self, refresh_token, institute_code):
 		self.refresh_token = refresh_token
 		self.institude_code = institute_code
-		self.SCHOOL_URL = f"https://{institute_code}.e-kreta.hu"
+		self.SCHOOL_URL = f'https://{institute_code}.e-kreta.hu'
 		return self.refresh_auth()
+
+	def set_access_token(self, access_token, refresh_token = None):
+		self.access_token = access_token
+		self.refresh_token = refresh_token
+		jwt_data = jwt.decode(access_token, options={"verify_signature": False})
+		institute_code = jwt_data['kreta:institute_code']
+		self.SCHOOL_URL = f'https://{institute_code}.ekreta.hu'
 
 	def refresh_auth(self):
 		post_data = {
