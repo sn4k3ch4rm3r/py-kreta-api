@@ -71,7 +71,12 @@ class KretaAPI:
 		self.refresh_token = refresh_token
 		jwt_data = jwt.decode(access_token, options={"verify_signature": False})
 		institute_code = jwt_data['kreta:institute_code']
-		self.SCHOOL_URL = f'https://{institute_code}.ekreta.hu'
+		self.SCHOOL_URL = f'https://{institute_code}.e-kreta.hu'
+		self.auth_headers = {
+				'User-Agent': self.useragent,
+				'Authorization': f'Bearer {self.access_token}'
+		}
+			
 
 	def refresh_auth(self):
 		post_data = {
