@@ -16,14 +16,22 @@ class KretaEndpoints:
 	capabilities = "/ellenorzo/V3/Sajat/Intezmenyek"
 	
 class KretaAPI:
-	IDP_URL = "https://idp.e-kreta.hu"
+	IDP_URL = 'https://idp.e-kreta.hu'
 
 	def __init__(self, useragent):
 		self.useragent = useragent
 
+	def get_school_list(self):
+		urls = requests.get('https://kretamobile.blob.core.windows.net/configuration/ConfigurationDescriptor.json').json()
+		response = requests.get(urls['GlobalMobileApiUrlPROD'] + '/api/v3/Institute', headers = {
+			'User-Agent': self.useragent,
+			'apiKey': '7856d350-1fda-45f5-822d-e1a2f3f1acf0'
+		})
+		return response.json()
+
 	def authenticate(self, username, password, institute_code):
 		self.institude_code = institute_code
-		self.SCHOOL_URL = f"https://{institute_code}.e-kreta.hu"
+		self.SCHOOL_URL = f'https://{institute_code}.e-kreta.hu'
 
 		post_data = {
 			'userName': username,
